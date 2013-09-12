@@ -1,0 +1,267 @@
+<?php
+require("../auth_head.php");
+html_header('VPN使用说明');
+$dbc = newDbc();
+$username=$_SESSION['username'];
+$nowip =get_user_ip();
+mysql_select_db(DB_NAME, $dbc);
+mysql_query("SET NAMES gbk");
+$result=mysql_query("SELECT user.* FROM user WHERE user.username='".$username."' ");
+$row=mysql_fetch_row($result);
+$quota_bytes=$row[8];
+$plan=$row[8]/1073741824;
+$coin=$row[12];
+?>
+<!--[if lte IE 7]> 
+<style type="text/css"> .icon-chevron-right { display:none; } </style>
+<![endif]--> 
+<!--[if lte IE 6]>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-ie6.css">
+<link rel="stylesheet" type="text/css" href="css/ie.css?v=620">
+<![endif]-->
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<![endif]-->
+<script type="text/javascript" defer>
+function checked_price(){
+  plan=<?php echo $plan ?>;
+  if(plan==10){
+	  plan=6;
+  }
+  plan=plan-1;
+  var price = [0,10,15,20,25,50]
+  for(i=0; i<=plan; i++){
+	  document.getElementById(i).style.display="";
+	  document.getElementById(i).innerHTML = " - 免费";
+  }
+  for(i=plan+1; i<=5;i++){
+	  document.getElementById(i).style.display="";
+	  document.getElementById(i).innerHTML = " - "+price[i]+"元";
+  }
+  
+}
+
+function set_active(banner){
+	document.getElementById(banner).className="active";
+}
+function userInfo(){
+	var allTime = document.getElementById("allTime").innerHTML;
+	
+	var onTime = document.getElementById("onTime").innerHTML;
+
+	var level = document.getElementById("level");
+	var le = document.getElementById("le");
+	if(allTime == onTime){
+		le.style.width = 100+"%";
+	}
+	else if(onTime == 0){
+		le.style.width = 0;
+	}
+	else{
+		countPercent(onTime,allTime,level,le);
+	}
+}
+function countPercent(onHours,allHours,level,le){
+	var floatNum = onHours/allHours;
+	var percent = floatNum.toFixed("2");
+	var toPercent;
+	if(percent == 1.00){
+		toPercent = 99;
+	}
+	else if(percent == 0.00){
+		toPercent = 1;
+	}
+	else{
+		toPercent = percent.substring(2);
+	}
+	le.style.width = toPercent+"%";
+	var showTime = document.getElementById("showTime");
+	//var inputgetNum = document.getElementById("inputgetNum");
+	showTime.style.display = "block";
+		//inputgetNum.style.display = "none";
+		onHours = document.getElementById("usedsize").innerHTML;
+		allHours = document.getElementById("totalsize").innerHTML;
+		showTime.innerHTML = "已用流量:"　+ onHours +"/"+ allHours;
+}
+</script>
+<!-- Le styles -->
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<script type="../text/javascript" src="js/scrolltop.js?v=6.2"></script>
+<link media="all" rel="stylesheet" href="../css/index_new.css?v=6" type="text/css" />
+<link href="../css/bootstrap-responsive.min.css" rel="stylesheet">
+<script type="text/javascript" src="../js/ajax.js"></script>
+</head>
+<body onLoad="userInfo();" style="background:url('img/dianbg.jpg')">
+    <!--导航栏-->
+    <?php 
+		require("../header_in.php");
+	?>
+    <script type="text/javascript">
+    	set_active("nav_instru");
+	</script>
+    <!--/导航栏-->
+<!--一级框架-->
+    <div class="container-fluid" style="margin-top:20px; padding-bottom:150px; height:auto; min-height:100%">
+    <!--二级框架-->
+		<div class="row-fluid">
+        <div class="span1" style="width:3%;min-height:3px"></div>
+        <div class="span2" >
+          <div class=" sidebar-nav";>
+            <ul class="nav nav-tabs nav-stacked">
+              <li class="nav-li" style=" border-top-left-radius: 5px; border-top-right-radius: 5px;" id="index"> 
+                <a href="?">
+                  <i class="icon-home"></i>首页
+                </a> 
+              </li>
+              <li class="nav-li">
+                <i class="icon-chevron-right" style="margin-top: 12px;"></i>
+                  <a href="../doc/openvpn-2.2.1-install.exe">openvpn程序下载</a>
+              </li>
+              <li class="nav-li">
+                <i class="icon-chevron-right" style="margin-top: 12px;"></i>
+                  <a href="../doc/vpn-noncert.zip">openvpn证书文件下载</a>
+              </li>
+              <li class="nav-li">
+              <i class="icon-chevron-right" style="margin-top: 12px;"></i>
+                  <a href="../doc/instru.php">openvpn使用说明</a>
+              </li>
+              <?php
+                $query = "select * from setting where `show`=1";
+                $result = mysql_query($query);
+                while($row = mysql_fetch_row($result))
+                  {
+              ?>
+              <li class="nav-li" id="<?php echo $row['0']?>">
+                <i class="icon-chevron-right" style="margin-top: 12px;"></i>
+                  <a href="#"  onclick='loadXML("../ajax/ls-inner.php","<?php echo $row['0'] ?>")'><?php echo $row['1'] ?></a>
+              </li>
+             <?php } ?>
+              <li class="nav-li" style=" border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; " id="upload"> 
+                <i class="icon-chevron-right" style="margin-top: 12px;"></i>
+                <a href="#"  onclick='HttpRequest("../ajax/changequota.php");checked_price();'>更改流量计划</a> 
+              </li>
+          </ul>
+         </div><!--/.sidebar-nav -->
+       </div><!--/span2-->
+       <!-- 右侧主框架-->
+       <div class="span9" id="more" style=" ">
+       <div class="row" style="background:white;box-shadow:3px 3px #ddd;margin-left:0.1%;border-radius:5px;border:1px solid #d3d3d3;">
+       <!-- 右侧主框架左栏-->
+       <div class="span9" style="border-right:1px solid #d3d3d3;padding-bottom:20px;">
+       <div style="margin:20px;">
+       <!-- 使用说明 -->
+      <h3>VPN使用说明</h3>
+      <table class='table table-hover '> <tbody>
+      <tr><td>
+<p>1.下载VPN客户端程序 OPENVPN 点击进入下载－openvpn-2.2.1-install.exe ，并执行安装。  </p>
+<p>2.下载客户端配置文件 点击下载vpn-noncert.zip  </p>
+<p>3.打开OPENVPN安装文件夹，默认的为C:/Program Files (x86)/OpenVPN/,将vpn-noncert.zip中的config文件夹解压到这个文件夹中，如果询问是否合并请选择合并。config文件夹也可在开始菜单--程序--OpenVPN--Shortcuts--OpenVPN configuration file directory找到。  </p>
+<p>4.用管理员权限运行OPENVPN，在右下角会出现小图标，右键点connect，等待小图标变绿既成功。过程中会要求输入用户名密码，输入个人的密码。每人初始流量1G，超过流量会无法连接 </p>
+
+      </td></tr>
+      </tbody> </table>
+      <!-- /使用说明 -->
+      </div>						
+      </div>
+      <!-- /右侧主框架左栏-->
+      <!--右侧边栏开始-->
+      <?php
+            $result=mysql_query("SELECT user.* FROM user WHERE user.username='".$username."' ");
+            //$row=mysql_fetch_row($result);
+           while($row=mysql_fetch_row($result))
+                {      				
+                //print($row);
+         ?>
+      <div id="allTime" style="display:none"><?php echo $row[8] ?></div>
+      <div id="onTime" style="display:none"><?php echo  $row[10] ?></div>
+      <div id="usedsize" style="display:none"><?php echo  sizeformat($row[10]) ?></div>
+      <div id="totalsize" style="display:none"><?php echo sizeformat($row[8]) ?></div>
+      <div class="span3 hidden-phone" style="margin-left:0px;width:25.5%">
+          <div style="margin:16px">
+              <div>
+                <h3>VPN账户余额:
+                    <code style='font-size:large'><?php echo $row[12] ?></code>元 
+                </h3>
+              </div>
+              <a class='btn btn-large btn-primary' href="setting">充值!</a><br />
+              <!--右边栏1层结束-->
+              <div class="uInfo" >
+                <p id="level"><span id="le"></span></p>  
+                <div  class="getNum" >
+                  <P id="showTime" ></p>
+                  <!--input id="inputgetNum" type="button" value="显示流量" onclick="userInfo()"-->
+                </div>  
+              </div>
+              <!--右边栏流量条结束-->
+              <hr />
+              <!--时间模块开始-->
+              <?php
+              //time ,23点后显示
+              if (date("H") >=0)
+              {
+              ?>
+              <div style="margin-left:30%;">
+                <p style='align:center;margin:9px;'>
+                      <code id='tH'><?php echo date('H');?></code> :
+                      <code id='ti'><?php echo date("i"); ?></code> :
+                      <code id='ts'><?php if(date("i") == 59)
+                                              echo "hehe不告诉你";
+                                           else 
+                                              echo date('s');
+                                    ?>
+                      </code>
+                </p>
+                <script type='text/javascript'>
+                    setTimeout(setTime,600);
+                </script>
+              </div>
+             <?php
+             }
+              ?>
+            <!--时间模块结束-->
+          </div>
+      </div>
+      <!--/右侧边栏结束-->
+      <?php
+        }
+      ?>
+      </div>
+      </div>
+		</div>
+		<!--/二级框架-->
+		</div>
+		<!--一级框架--> 
+    <div class="footer" >
+      <p class="text-center">
+        <strong>友情链接：</strong>
+        <a href="http://www.euclan.com" target="_blank">EU战队</a>
+        <p class="text-center muted">Copyright &copy; VPN.EUCLAN.COM 2012-2013</p>
+      </p>
+    </div> <!--footer-->   
+    <div id="gotopbtn" title="回到顶部" style="display:none;">
+      <img src="../img/gototop.png">
+    </div>
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/unslider.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/keyEvents.js"></script>
+    <script type="text/javascript" src="js/jquery.pin.js"></script>
+    <script type="text/javascript">
+    $(".sidebar-nav").pin({ minWidth: 1000});
+    
+    $('.banner').unslider({
+        arrows: false,
+            fluid: true,
+            key:false,
+            dots: true
+    });
+    
+    goTopEx();
+    </script>
+  
+<!--[if lte IE 6]>
+  <script type="text/javascript" src="js/bootstrap-ie.js"></script>
+  <![endif]-->
+</body>
+<html>
