@@ -606,7 +606,7 @@ function save_vpnconfig_file($filename, $dbhost, $dbname,$dbpw,$dbuser) {
     
      <<<EOT
 <?php
-define("SITE_NAME","$dbhost");//数据库服务器
+define("SITE_NAME","$dbhost");//网站名称
 define("DB_USER","$dbuser");//数据库用户名
 define("DB_PASSWORD","$dbpw");//数据库密码
 define("DB_NAME","$dbname");//数据库名
