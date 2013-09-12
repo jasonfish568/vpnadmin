@@ -32,13 +32,13 @@ $row = mysqli_fetch_array($result);
 echo $row['user'];
 $num = -10;
 $user =$row['user'];
-$type="èµ„æº".$fileName."è¢«åˆ é™¤";
+$type="×ÊÔ´".$fileName."±»É¾³ı";
 $date =$row['date'];
 coinChange($user,$num,$type);
 
 $query = "DELETE FROM resource WHERE subject='".$subject."' and name = '".$fileName."';";
-echo "<div class='well'><h1><div class='alert alert-success' style='TEXT-align:center;'>åˆ é™¤æˆåŠŸ</div></h1></div>";
-if(mysqli_query($dbc,$query)) echo "å·²ä»æ•°æ®åº“åˆ é™¤";
+echo "<div class='well'><h1><div class='alert alert-success' style='TEXT-align:center;'>É¾³ı³É¹¦</div></h1></div>";
+if(mysqli_query($dbc,$query)) echo "ÒÑ´ÓÊı¾İ¿âÉ¾³ı";
 echo "<h1 id='countdown' class='well' style='TEXT-align:center'>lalala</h1>";
 
 $query ="delete from comment where subject='".$subject."' and file='".$fileName."'";
@@ -50,11 +50,11 @@ mysqli_query($dbc,$query) or die($query. "  delete info failed!");
 
 
 <script language="javascript">
-//<!-- å€’è®¡æ—¶5ç§’å…³é—­é¡µé¢
+//<!-- µ¹¼ÆÊ±5Ãë¹Ø±ÕÒ³Ãæ
 function clock(){
     i=i-1;
-    document.title = "æœ¬çª—å£å°†åœ¨"+i+"ç§’åè‡ªåŠ¨å…³é—­!";
-    document.getElementById("countdown").innerHTML =  "æœ¬çª—å£å°†åœ¨"+i+"ç§’åè‡ªåŠ¨å…³é—­!";
+    document.title = "±¾´°¿Ú½«ÔÚ"+i+"Ãëºó×Ô¶¯¹Ø±Õ!";
+    document.getElementById("countdown").innerHTML =  "±¾´°¿Ú½«ÔÚ"+i+"Ãëºó×Ô¶¯¹Ø±Õ!";
     if(i>0)setTimeout("clock();",1000);
 //    else self.close();
     }

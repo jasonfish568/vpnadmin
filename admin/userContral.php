@@ -22,30 +22,30 @@ if($_POST['upOrDown'] == 'dec'){
 }
 $type = $_POST['descr'];
 if($type == ''){
-    $type = 'ç®¡ç†å‘˜ä¿®æ”¹';
+    $type = '¹ÜÀíÔ±ĞŞ¸Ä';
 }
 coinChange($user,$num,$type);
 echo "<h5>";
 if($num >0)
-    echo $user."è´¦æˆ·ä½™é¢å˜æ›´:".$type."<code>+".$num."</code>";
+    echo $user."ÕË»§Óà¶î±ä¸ü:".$type."<code>+".$num."</code>";
 else
-    echo $user."è´¦æˆ·ä½™é¢å˜æ›´:".$type."<code>".$num."</code>";
+    echo $user."ÕË»§Óà¶î±ä¸ü:".$type."<code>".$num."</code>";
 echo "</h5>";
-//echo "è²Œä¼¼å¯ä»¥äº†";
+//echo "Ã²ËÆ¿ÉÒÔÁË";
 $result = quota_change($user,$quota);
 echo "<h5>";
 if($result==1){
-	echo "æµé‡è®¡åˆ’æ›´æ”¹æˆåŠŸ<br\>";
-	echo "æ–°æµé‡è®¡åˆ’:".sizeformat($quota);
+	echo "Á÷Á¿¼Æ»®¸ü¸Ä³É¹¦<br\>";
+	echo "ĞÂÁ÷Á¿¼Æ»®:".sizeformat($quota);
 }
 else if($result==2){
-	echo "æµé‡è®¡åˆ’æ›´æ”¹å¤±è´¥";
+	echo "Á÷Á¿¼Æ»®¸ü¸ÄÊ§°Ü";
 }
 else if($result==3){
-	echo "å‰©ä½™æµé‡ä¸è¶³";
+	echo "Ê£ÓàÁ÷Á¿²»×ã";
 }
 else if($result==4){
-	echo "æµé‡è®¡åˆ’æ²¡æœ‰æ›´æ”¹";
+	echo "Á÷Á¿¼Æ»®Ã»ÓĞ¸ü¸Ä";
 }
 echo "</h5>";
 ?>

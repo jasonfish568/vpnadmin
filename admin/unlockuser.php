@@ -19,9 +19,9 @@
   $query ="UPDATE user SET enabled = 1 WHERE user.username = '".$user."'";
   mysql_query($query);
   mysql_close($dbc);
-  echo "æ´»è·ƒ";
+  echo "»îÔ¾";
 
 ?>
 <script type="text/javascript">
-	$("#change").html("<h5><?php echo $user ?>ç”¨æˆ·å·²è§£é”</h5>");
+	$("#change").html("<h5><?php echo $user ?>ÓÃ»§ÒÑ½âËø</h5>");
  </script>
